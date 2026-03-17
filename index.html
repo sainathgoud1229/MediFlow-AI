@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediFlow AI - Smart Resource Locator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Header Section -->
+        <header class="hero-section">
+            <div class="logo-container">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+                    </svg>
+                </div>
+                <h1>MediFlow <span class="highlight">AI</span></h1>
+            </div>
+            <p class="subtitle">Intelligent routing for blood, organs, and hospitals.</p>
+        </header>
+
+        <!-- Search Form Section -->
+        <main class="main-content">
+            <section class="search-card">
+                <h2>Find Resources Fast</h2>
+                <form id="search-form">
+                    <div class="form-grid">
+                        <div class="input-group">
+                            <label for="location">My Location</label>
+                            <select id="location" required>
+                                <option value="" disabled selected>Select starting point...</option>
+                                <option value="Tambaram">Tambaram</option>
+                                <option value="Chengalpattu">Chengalpattu</option>
+                                <option value="Guduvancheri">Guduvancheri</option>
+                                <option value="Trisulam">Trisulam</option>
+                                <option value="Perambur">Perambur</option>
+                                <option value="Chromepet">Chromepet</option>
+                                <option value="Guindy">Guindy</option>
+                                <option value="Velachery">Velachery</option>
+                                <option value="Adyar">Adyar</option>
+                                <option value="Taramani">Taramani</option>
+                            </select>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="need">What do you need?</label>
+                            <select id="need" required>
+                                <option value="" disabled selected>Select resource...</option>
+                                <option value="Blood">Blood Donation</option>
+                                <option value="Organ">Organ Transplant</option>
+                                <option value="Hospital">Emergency Hospital</option>
+                            </select>
+                        </div>
+
+                        <div class="input-group full-width">
+                            <label>Urgency Level</label>
+                            <div class="urgency-options">
+                                <label class="urgency-radio">
+                                    <input type="radio" name="urgency" value="low" checked>
+                                    <span class="custom-radio low">Low (Routine)</span>
+                                </label>
+                                <label class="urgency-radio">
+                                    <input type="radio" name="urgency" value="medium">
+                                    <span class="custom-radio medium">Medium (Urgent)</span>
+                                </label>
+                                <label class="urgency-radio">
+                                    <input type="radio" name="urgency" value="high">
+                                    <span class="custom-radio high">High (Critical)</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="submit-btn" id="search-button">
+                        <span class="btn-text">Run AI Search</span>
+                        <div class="loader hidden" id="search-loader"></div>
+                    </button>
+                </form>
+            </section>
+
+            <!-- Map Section -->
+            <section class="map-section" id="map-container">
+                <div id="map"></div>
+            </section>
+
+            <!-- Results Section -->
+            <section class="results-section hidden" id="results-container">
+
+                <!-- 360 Local Search -->
+                <div class="local-search-container" id="local-search-container"
+                    style="margin-bottom: 2rem; background: var(--card-bg); padding: 2rem; border-radius: var(--border-radius-lg); box-shadow: var(--shadow-soft); border: 1px solid rgba(255,255,255,0.4);">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <h3 style="color: var(--text-main); font-size: 1.4rem;">📍 360° Local Search (People Near Me)
+                        </h3>
+                        <button id="toggle-patient-mgr"
+                            style="background:var(--primary); color:white; border:none; padding:0.5rem 1rem; border-radius:6px; cursor:pointer; font-weight:600; font-size:0.9rem;">+
+                            Manage Patients</button>
+                    </div>
+
+                    <!-- Hidden Patient Manager Panel -->
+                    <div id="patient-manager-panel" class="hidden"
+                        style="margin-bottom: 1.5rem; background: rgba(79, 70, 229, 0.05); border: 1px solid rgba(79, 70, 229, 0.2); border-radius: 8px; padding: 1.5rem;">
+                        <h4 style="margin-bottom: 1rem; color: var(--primary);">Add New Patient/Donor</h4>
+                        <div
+                            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; align-items: end;">
+                            <div>
+                                <label style="display:block; font-size:0.8rem; margin-bottom:0.25rem;">Name</label>
+                                <input type="text" id="new-patient-name" placeholder="e.g. John D."
+                                    style="width:100%; padding:0.5rem; border:1px solid #cbd5e1; border-radius:4px;">
+                            </div>
+                            <div>
+                                <label style="display:block; font-size:0.8rem; margin-bottom:0.25rem;">Details</label>
+                                <input type="text" id="new-patient-detail" placeholder="e.g. O+ Donor"
+                                    style="width:100%; padding:0.5rem; border:1px solid #cbd5e1; border-radius:4px;">
+                            </div>
+                            <div>
+                                <label style="display:block; font-size:0.8rem; margin-bottom:0.25rem;">Resource
+                                    Type</label>
+                                <select id="new-patient-type"
+                                    style="width:100%; padding:0.5rem; border:1px solid #cbd5e1; border-radius:4px;">
+                                    <option value="Blood">Blood</option>
+                                    <option value="Organ">Organ</option>
+                                    <option value="Hospital">Clinic</option>
+                                </select>
+                            </div>
+                            <button id="add-patient-btn"
+                                style="background:var(--secondary); color:white; border:none; padding:0.6rem; border-radius:4px; cursor:pointer; font-weight:bold;">Add
+                                to Database</button>
+                        </div>
+                    </div>
+
+                    <div id="local-donors-grid"
+                        style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <h3 class="results-title">AI PATH FINDER</h3>
+                <div class="results-grid">
+
+                    <!-- BFS Result -->
+                    <div class="result-card bfs-card">
+                        <div class="card-header">
+                            <span class="badge bfs-badge">Nearest Option</span>
+                            <h4>Shortest Path</h4>
+                        </div>
+                        <div class="card-body" id="bfs-result">
+                            <!-- Populated by JS -->
+                        </div>
+                        <div class="card-footer explanation">
+                            <p><strong>Why this?</strong> Found using <span class="highlight-text">Breadth-First Search
+                                    (BFS)</span> exploring level by level. Guaranteed to find the location with the
+                                fewest hops/shortest physical distance from start.</p>
+                        </div>
+                    </div>
+
+                    <!-- DFS Result -->
+                    <div class="result-card dfs-card">
+                        <div class="card-header">
+                            <span class="badge dfs-badge">Alternative</span>
+                            <h4>Deep Search Match</h4>
+                        </div>
+                        <div class="card-body" id="dfs-result">
+                            <!-- Populated by JS -->
+                        </div>
+                        <div class="card-footer explanation">
+                            <p><strong>Why this?</strong> Found using <span class="highlight-text">Depth-First Search
+                                    (DFS)</span> diving deep into the network. Great for finding rare resources (like
+                                specific blood types or organs) that aren't available nearby.</p>
+                        </div>
+                    </div>
+
+                    <!-- Cost-Based Result -->
+                    <div class="result-card cost-card">
+                        <div class="card-header">
+                            <span class="badge cost-badge">Best Overall</span>
+                            <h4>Optimized Choice</h4>
+                        </div>
+                        <div class="card-body" id="cost-result">
+                            <!-- Populated by JS -->
+                        </div>
+                        <div class="card-footer explanation">
+                            <p><strong>Why this?</strong> Found using a structured <span class="highlight-text">Cost
+                                    Function</span>.</p>
+                            <p class="formula"><code>Cost = Distance + Wait Time + Availability</code></p>
+                            <p>This result offers the lowest total cost, balancing drive time with hospital readiness.
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer Section -->
+        <footer class="app-footer">
+            <p>&copy; 2026 TEAM HACKSPHERE MADE FOR AI PROJECT.</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
