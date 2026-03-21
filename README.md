@@ -1,105 +1,56 @@
-MediFlow AI – Smart Medical Resource Locator
-📌 Project Overview
+🏥 MediFlow AI
 
-MediFlow AI is an AI-powered web application that helps users find blood donors, organ donors, and hospitals using intelligent search algorithms
+##Smart Medical Resource Routing System**
 
-🚀 Features
+⚡ Intelligent routing for blood, organs, and emergency services using core AI search algorithms
 
-📍 Location-based search
+ 📌 Overview
 
-🩸 Blood donor finder
+MediFlow AI is a web-based system for optimizing medical resource allocation. It applies AI search strategies to route patients and resources efficiently based on distance, urgency, and availability.
 
-❤️ Organ availability tracker
 
-🏥 Emergency hospital locator
+ 🧠 Algorithms
 
-⚡ Urgency-based filtering
+🔹 BFS: Finds nearest resource (minimum hops)
+🔹 A*:Computes optimal path using heuristic distance
+🔹 Cost Model:
+  `Cost = Distance + Wait Time + Availability`
 
-🧠 AI Search Algorithms:
+---
 
-BFS → Nearest option
+ 🚑 Features
 
-DFS → Deep search
+* 🗺️ Interactive map with route visualization
+* 📡 Simulated real-time data feed
+* 💾 Local donor/resource storage
+* 🤖 Rule-based assistant for triage support
 
-Cost-based → Best optimized result
+---
 
-🧠 AI Algorithms Used
-🔵 BFS (Breadth-First Search)
+ 🛠️ Tech Stack
 
-Finds the shortest path / nearest resource
+* HTML5, CSS3, JavaScript
+* Leaflet.js
+* LocalStorage
 
-🔴 DFS (Depth-First Search)
+---
 
-Finds deep/rare matches
+ 🚀 Run Locally
 
-🟢 Cost-Based Search
+1. Clone repo
+2. Open project folder
+3. Run `index.html` in browser
 
-Chooses the best overall option
+---
 
-Cost = Distance + WaitTime + Availability
-🌐 Tech Stack
+🔮 Future Scope
 
-HTML
+* Backend integration
+* Real-time data
+* Advanced analytics
+* Role-based access
 
-CSS
 
-JavaScript
+Team
+TEAM VIBROS
 
-Leaflet.js (Map integration)
-
-📁 Project Structure
-MediFlow-AI/
-│── index.html
-│── styles.css
-│── script.js
-│── README.md
-⚙️ Setup & Run (Bash Commands)
-1️⃣ Clone Repository
-git clone https://github.com/your-username/mediflow-ai.git
-cd mediflow-ai
-2️⃣ Open Project
-# Option 1 (VS Code)
-code .
-
-# Option 2 (Manual)
-open index.html
-3️⃣ Run Locally (Simple Way)
-# Using Live Server (VS Code extension)
-# Right click → Open with Live Server
-4️⃣ Run Using Python Server (Optional)
-# Python 3
-python -m http.server 8000
-
-Then open:
-
-http://localhost:8000
-🧪 How It Works
-User Input → AI Processing → Results
-Input:
-  Location + Resource + Urgency
-
-Processing:
-  BFS → Nearest
-  DFS → Deep Search
-  Cost Function → Best Option
-
-Output:
-  3 Results Displayed
-🎯 Real-World Use Cases
-
-Emergency medical search
-
-Blood donation systems
-
-Organ transplant support
-
-Smart hospital routing
-
-🧪 Future Improvements
-- Add real-time database
-- Integrate GPS tracking
-- AI prediction model
-- Mobile app version
-👨‍💻 Developed By
-
-        TEAM HACKSPHERE
