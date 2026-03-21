@@ -15,6 +15,12 @@
 
 <body>
     <div class="app-container">
+        <!-- Predictive Analytics Banner -->
+        <div id="predictive-banner" class="predictive-banner">
+            <span>🤖 AI Network Alert:</span>
+            <span id="prediction-text">Analyzing regional real-time data...</span>
+        </div>
+
         <!-- Header Section -->
         <header class="hero-section">
             <div class="logo-container">
@@ -85,11 +91,25 @@
                         <span class="btn-text">Run AI Search</span>
                         <div class="loader hidden" id="search-loader"></div>
                     </button>
+
+                    <!-- Emergency SOS Button -->
+                    <button type="button" class="sos-btn" id="sos-button">
+                        <span class="sos-icon">🚨</span>
+                        <span>Emergency SOS Broadcast</span>
+                    </button>
                 </form>
             </section>
 
             <!-- Map Section -->
             <section class="map-section" id="map-container">
+                <button id="show-real-data-btn" class="show-data-btn">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                        <path
+                            d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14z" />
+                        <path d="M7 10h2v7H7zm4-3h2v10h-2zm4 6h2v4h-2z" />
+                    </svg>
+                    Live Database
+                </button>
                 <div id="map"></div>
             </section>
 
@@ -165,19 +185,19 @@
                         </div>
                     </div>
 
-                    <!-- DFS Result -->
-                    <div class="result-card dfs-card">
+
+
+                    <!-- A* Result -->
+                    <div class="result-card astar-card">
                         <div class="card-header">
-                            <span class="badge dfs-badge">Alternative</span>
-                            <h4>Deep Search Match</h4>
+                            <span class="badge astar-badge" style="background:#d97706; color:white;">Informed Search</span>
+                            <h4>A* Heuristic Route</h4>
                         </div>
-                        <div class="card-body" id="dfs-result">
+                        <div class="card-body" id="astar-result">
                             <!-- Populated by JS -->
                         </div>
                         <div class="card-footer explanation">
-                            <p><strong>Why this?</strong> Found using <span class="highlight-text">Depth-First Search
-                                    (DFS)</span> diving deep into the network. Great for finding rare resources (like
-                                specific blood types or organs) that aren't available nearby.</p>
+                            <p><strong>Why this?</strong> Found using the <span class="highlight-text">A* Algorithm</span>. It uses geographic distance as a <em>heuristic</em> to actively move towards the target rather than blindly exploring.</p>
                         </div>
                     </div>
 
@@ -203,13 +223,88 @@
             </section>
         </main>
 
+        <!-- Real Data Modal -->
+        <div id="real-data-modal" class="data-modal hidden">
+            <div class="data-modal-content">
+                <div class="db-feed-header">
+                    <h2><span class="live-dot"></span> Live Database: Past 24 Hours</h2>
+                    <div style="display:flex; align-items:center; gap:1rem;">
+                        <span class="badge dfs-badge" style="margin:0;">Updating Real-Time</span>
+                        <button id="close-data-btn" class="close-data-btn">✖</button>
+                    </div>
+                </div>
+                <div class="table-container" style="max-height: 400px; overflow-y:auto; padding-right:1rem;">
+                    <table class="db-table">
+                        <thead>
+                            <tr>
+                                <th>Timestamp</th>
+                                <th>Name / ID</th>
+                                <th>Resource Type</th>
+                                <th>Action</th>
+                                <th>Location</th>
+                            </tr>
+                        </thead>
+                        <tbody id="db-feed-body">
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI Chat Agent Widget -->
+        <div id="ai-chat-widget" class="chat-widget">
+            <!-- Chat Toggle Button -->
+            <button id="chat-toggle-btn" class="chat-toggle-btn">
+                <span class="chat-icon">💬</span>
+            </button>
+
+            <!-- Chat Window -->
+            <div id="chat-window" class="chat-window hidden">
+                <div class="chat-header">
+                    <div>
+                        <h4>MediFlow Assistant</h4>
+                        <span class="online-status">● Online</span>
+                    </div>
+                    <button id="close-chat-btn" class="close-chat-btn">✖</button>
+                </div>
+
+                <div id="chat-messages" class="chat-messages">
+                    <div class="chat-message ai-message">
+                        Hello! I'm the MediFlow AI Assistant. How can I help you find medical resources today?
+                    </div>
+                </div>
+
+                <div class="chat-input-area">
+                    <input type="text" id="chat-input" placeholder="Ask about blood, hospitals..." autocomplete="off" />
+                    <button id="send-chat-btn" class="send-chat-btn">
+                        <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
+                            <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
         <!-- Footer Section -->
         <footer class="app-footer">
-            <p>&copy; 2026 TEAM HACKSPHERE MADE FOR AI PROJECT.</p>
+            <p>&copy; 2026 TEAM-VIBROS MADE FOR AI PROJECT.</p>
         </footer>
     </div>
 
     <script src="script.js"></script>
+
+    <!-- SOS Modal -->
+    <div id="sos-modal" class="sos-modal hidden">
+        <div class="radar-container">
+            <div class="radar-sweep"></div>
+            <div class="radar-dot dot-1"></div>
+            <div class="radar-dot dot-2"></div>
+            <div class="radar-dot dot-3"></div>
+        </div>
+        <h3 class="sos-title">BROADCASTING EMERGENCY</h3>
+        <p class="sos-subtitle">Locating nearest available trauma center & donors...</p>
+    </div>
 </body>
 
 </html>
