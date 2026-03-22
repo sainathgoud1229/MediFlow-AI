@@ -1,8 +1,9 @@
 // --- DUMMY DATA --- //
 // Graph showing physical connections between distinct locations in Chennai region
 const locationGraph = {
-    'Chengalpattu': ['Guduvancheri'],
-    'Guduvancheri': ['Chengalpattu', 'Tambaram'],
+    'Chengalpattu': ['Potheri'],
+    'Potheri': ['Chengalpattu', 'Guduvancheri'],
+    'Guduvancheri': ['Potheri', 'Tambaram'],
     'Tambaram': ['Guduvancheri', 'Trisulam', 'Chromepet'],
     'Chromepet': ['Tambaram', 'Guindy', 'Trisulam'],
     'Trisulam': ['Tambaram', 'Chromepet', 'Perambur'],
@@ -16,6 +17,7 @@ const locationGraph = {
 // --- MAP SYSTEM --- //
 const locationCoords = {
     'Chengalpattu': [12.6819, 79.9888],
+    'Potheri': [12.8239, 80.0436],
     'Guduvancheri': [12.8427, 80.0558],
     'Tambaram': [12.9249, 80.1100],
     'Chromepet': [12.9516, 80.1404],
@@ -38,6 +40,11 @@ const resourceDatabase = {
         name: 'Chengalpattu Govt Hospital',
         inventory: ['Blood', 'Hospital'],
         distance: 12, waitTime: 45, availability: 3
+    },
+    'Potheri': {
+        name: 'SRM General Hospital',
+        inventory: ['Hospital', 'Blood'],
+        distance: 2, waitTime: 15, availability: 4
     },
     'Guduvancheri': {
         name: 'SRM Medical Clinic',
@@ -92,6 +99,9 @@ const DEFAULT_LOCAL_DONORS = {
     'Chengalpattu': [
         { id: '1', name: 'Arun K.', detail: 'O+ Volunteer', distance: '0.5 km', type: 'Blood', coords: [12.6859, 79.9858] },
         { id: '2', name: 'City Blood Bank', detail: 'General Supply', distance: '1.2 km', type: 'Blood', coords: [12.6780, 79.9910] }
+    ],
+    'Potheri': [
+        { id: 'p1', name: 'Student Reserve', detail: 'Campus Blood Drive', distance: '0.3 km', type: 'Blood', coords: [12.8250, 80.0450] }
     ],
     'Guduvancheri': [
         { id: '3', name: 'Suresh M.', detail: 'A- Donor', distance: '0.3 km', type: 'Blood', coords: [12.8450, 80.0510] },
@@ -706,13 +716,19 @@ function executeSearch(startLocation, need, urgency) {
     renderCard('bfs-result', bfsResultObj, 'Shortest Path Hops');
     if (bfsResultObj) drawPathOnMap(bfsResultObj.path, '#4338ca'); // Blue for BFS
 
-    // 2. Execute A* Search
+    // 2. Execute DFS
+    const dfsResultObj = findAlternative(startLocation, need);
+    if (dfsResultObj) dfsResultObj.routeDistance = calculatePathDistance(dfsResultObj.path);
+    renderCard('dfs-result', dfsResultObj, 'Deep/Alternative Match');
+    if (dfsResultObj) drawPathOnMap(dfsResultObj.path, '#be185d'); // Pink for DFS
+
+    // 3. Execute A* Search
     const astarResultObj = findAStar(startLocation, need);
     if (astarResultObj) astarResultObj.routeDistance = calculatePathDistance(astarResultObj.path);
     renderCard('astar-result', astarResultObj, 'Heuristic Driven Match');
     if (astarResultObj) drawPathOnMap(astarResultObj.path, '#d97706'); // Orange for A*
 
-    // 3. Execute Cost Based
+    // 4. Execute Cost Based
     const costResultObj = findBestOverall(startLocation, need, urgency);
     renderCard('cost-result', costResultObj, `Calculated Cost: ${costResultObj ? costResultObj.calculatedCost : 'N/A'} (Urgency: ${urgency.toUpperCase()})`);
     if (costResultObj) drawPathOnMap(costResultObj.path, '#047857'); // Green for Cost
@@ -958,3 +974,4 @@ window.dispatchRescue = function(pathArray) {
 
     requestAnimationFrame(animateMarker);
 };
+
