@@ -47,6 +47,7 @@
                                 <option value="" disabled selected>Select starting point...</option>
                                 <option value="Tambaram">Tambaram</option>
                                 <option value="Chengalpattu">Chengalpattu</option>
+                                <option value="Potheri">Potheri</option>
                                 <option value="Guduvancheri">Guduvancheri</option>
                                 <option value="Trisulam">Trisulam</option>
                                 <option value="Perambur">Perambur</option>
@@ -185,7 +186,20 @@
                         </div>
                     </div>
 
-
+                    <!-- DFS Result -->
+                    <div class="result-card dfs-card">
+                        <div class="card-header">
+                            <span class="badge dfs-badge">Deep/Alternative Match</span>
+                            <h4>Alternative Route</h4>
+                        </div>
+                        <div class="card-body" id="dfs-result">
+                            <!-- Populated by JS -->
+                        </div>
+                        <div class="card-footer explanation">
+                            <p><strong>Why this?</strong> Found using <span class="highlight-text">Depth-First Search
+                                    (DFS)</span>. Useful for finding alternative deeper matches when the nearest option isn't viable.</p>
+                        </div>
+                    </div>
 
                     <!-- A* Result -->
                     <div class="result-card astar-card">
